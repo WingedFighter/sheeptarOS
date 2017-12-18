@@ -51,9 +51,4 @@ Temporary Items
 /.screeps.json
 /node_modules/
 /dist/
-.idea/misc.xml
-.idea/modules.xml
-.idea/sheeptarOS.iml
-.idea/workspace.xml
-.idea/dictionaries/mjohn.xml
-.idea/jsLibraryMappings.xml
+/.idea/

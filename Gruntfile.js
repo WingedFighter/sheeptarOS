@@ -66,5 +66,5 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['clean', 'copy:screeps', 'screeps']);
+    grunt.registerTask('default', ['clean', 'copy:screeps', 'file_append', 'screeps']);
 };
