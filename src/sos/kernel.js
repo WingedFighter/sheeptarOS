@@ -26,7 +26,7 @@ class Kernel {
         this.newreset = LAST_RESET === Game.time;
         this.simulation = !!Game.rooms['sim'];
         this.scheduler = new Scheduler();
-        this.process = new Process();
+        this.process = Process;
 
         this.tickCPULimit();
     }
@@ -113,10 +113,35 @@ class Kernel {
     }
 
     run () {
-
+        while(this.canContinue()) {
+            const currentProcess = this.scheduler.getNextProcess();
+            if (!currentProcess) {
+                return;
+            }
+            Logger.defaultLogGroup = currentProcess.name;
+            try {
+                let name = currentProcess.name;
+                Logger.log(`Running ${name} (pid ${currentProcess.pid})`, LOG_TRACE, 'kernel');
+                currentProcess.run();
+            } catch (e) {
+                let message = 'Program Error Occurred\n';
+                message += `process ${currentProcess.pid}: ${currentProcess.name}\n`;
+                message += !!e && !!e.stack ? e.stack : e.toString();
+                Logger.log(message, LOG_ERROR);
+            }
+            Logger.defaultLogGroup = 'default';
+        }
     }
 
     shutdown () {
+        const processCount = this.scheduler.getProcessCount();
+        const completedCount = this.scheduler.memory.processTable.completed.length;
+
+        Logger.log(`Processes Run: ${completedCount}/${processCount}`, LOG_INFO, 'kernel');
+        Logger.log(`Tick Limit: ${Game.cpu.tickLimit}`, LOG_INFO, 'kernel');
+        Logger.log(`Kernel Limit: ${this.limit}`, LOG_INFO, 'kernel');
+        Logger.log(`CPU Used: ${Game.cpu.getUsed()}`, LOG_INFO, 'kernel');
+        Logger.log(`Bucket: ${Game.cpu.bucket}`, LOG_INFO, 'kernel');
 
     }
 

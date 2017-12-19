@@ -92,7 +92,7 @@ class Scheduler {
             if (x >= WALL) {
                 this.memory.processTable.hitwall = true;
             }
-            if (!this.memory.processTable.queues[x] || this.memory.processes.queues[x].length <= 0) {
+            if (!this.memory.processTable.queues[x] || this.memory.processTable.queues[x].length <= 0) {
                 continue;
             }
 
@@ -168,6 +168,15 @@ class Scheduler {
     }
 
     getPriorityForPID (pid) {
+        const program = this.getProcessForPID(pid);
+        if (!program.getPriority) {
+            return DEFAULT_PRIORITY;
+        }
+        const priority = program.getPriority();
+        return priority < MAX_PRIORITY ? priority : MAX_PRIORITY;
+    }
+
+    getProcessForPID (pid) {
         if (!this.processCache[pid]) {
             const ProgramClass = this.getProgramClass(this.memory.processTable.index[pid].n);
             this.processCache[pid] = new ProgramClass(pid,
