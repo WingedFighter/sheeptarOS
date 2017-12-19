@@ -24,7 +24,7 @@ module.exports = function(grunt) {
                 ptr: ptr
             },
             dist: {
-                src: ['src/*.js']
+                src: ['dist/*.js']
             }
         },
 
@@ -66,5 +66,5 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['clean', 'copy:screeps', 'file_append', 'screeps']);
+    grunt.registerTask('default', ['clean', 'copy:screeps', 'file_append:versioning', 'screeps']);
 };
