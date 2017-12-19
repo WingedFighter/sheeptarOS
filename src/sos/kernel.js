@@ -1,3 +1,6 @@
+const Scheduler = require('sos_scheduler');
+const Process = require('sos_process');
+
 global.BUCKET_EMERGENCY = 1000;
 global.BUCKET_FLOOR = 2000;
 global.BUCKET_CEILING = 9500;
@@ -9,6 +12,8 @@ const CPU_BUFFER = 10;
 const CPU_ADJUST = 0.05;
 const CPU_RESET_BOOST = 60;
 const SIMULATION_TICKS = 1000;
+const MINIMUM_PROGRAMS = 0.3;
+const PROGRAM_NORMALIZING_BURST = 2;
 
 class Kernel {
     constructor() {
@@ -19,10 +24,11 @@ class Kernel {
         }
 
         this.newreset = LAST_RESET === Game.time;
+        this.simulation = !!Game.rooms['sim'];
+        this.scheduler = new Scheduler();
+        this.process = new Process();
 
-        if (this.tickCPULimit() === 0) {
-            // Something to do with Emergency Stop
-        }
+        this.tickCPULimit();
     }
 
     tickCPULimit () {
@@ -47,12 +53,63 @@ class Kernel {
         return this.limit;
     }
 
-    start () {
+    canContinue() {
+        if (this.simulation) {
+            return true;
+        }
 
+        let current = Game.cpu.getUsed();
+
+        if (current >= Game.cpu.tickLimit - CPU_BUFFER) {
+            return false;
+        }
+
+        if (current < this.limit) {
+            return true;
+        }
+
+        if (Game.cpu.bucket > BUCKET_FLOOR) {
+            const total = this.scheduler.getProcessCount();
+            const completed = this.scheduler.getCompletedProcessCount();
+            if (completed / total < MINIMUM_PROGRAMS) {
+                if (current < this.limit * PROGRAM_NORMALIZING_BURST) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    start () {
+        Logger.log(`Initializing Kernel for tick ${Game.time}`, LOG_TRACE, 'kernel');
+        if(!Memory.SCRIPT_VERSION || Memory.SCRIPT_VERSION !== SCRIPT_VERSION) {
+            Logger.log(`New script upload detected: ${SCRIPT_VERSION}`, LOG_WARN);
+            Memory.SCRIPT_VERSION = SCRIPT_VERSION;
+            Memory.SCRIPT_UPLOAD = Game.time;
+        }
+
+        if (Game.time % 7 === 0) {
+            this.cleanUp();
+        }
+
+        this.scheduler.shift();
+
+        if (this.scheduler.getProcessCount() <= 0) {
+            this.scheduler.launchProcess('player');
+        }
     }
 
     cleanUp () {
+        Logger.log('Cleaning memory', LOG_TRACE, 'kernel');
+        let i;
+        for (i in Memory.creeps) { // jshint ignore:line
+            if (!Game.creeps[i]) {
+                delete Memory.creeps[i];
+            }
+        }
 
+        // Clean elsewhere
     }
 
     run () {
