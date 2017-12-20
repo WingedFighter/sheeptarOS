@@ -1,3 +1,10 @@
+/*
+    Label is Category
+    Name is description of process
+    Meta is associated data
+    Parent is the parent process
+ */
+
 class Process {
     constructor (pid, name, meta, parent) {
         this.pid = pid;
@@ -28,14 +35,14 @@ class Process {
         }
     }
 
-    launchChildProcess (label, name, data = {}) {
+    launchChildProcess (label, name, meta = {}) {
         if (!this.meta.children) {
             this.meta.children = {};
         }
         if (this.meta.children[label]) {
             return true;
         }
-        this.meta.children[label] = kernel.scheduler.launchProcess(name, data, this.pid);
+        this.meta.children[label] = kernel.scheduler.launchProcess(name, meta, this.pid);
         return this.meta.children[label];
     }
 
@@ -57,7 +64,7 @@ class Process {
         return kernel.scheduler.isPIDActive(pid);
     }
 
-    launchProcess (label, name, data = {}) {
+    launchProcess (label, name, meta = {}) {
         if (!this.meta.processes) {
             this.meta.processes = {};
         }
@@ -65,7 +72,7 @@ class Process {
         if (this.meta.processes[label]) {
             return true;
         }
-        this.meta.processes[label] = kernel.scheduler.launchProcess(name, data);
+        this.meta.processes[label] = kernel.scheduler.launchProcess(name, meta);
         return this.meta.processes[label];
     }
 
@@ -85,6 +92,26 @@ class Process {
             return false;
         }
         return kernel.scheduler.isPIDActive(pid);
+    }
+
+    launchProcessWithCreep (label, role, roomname, quantity = 1, options = {}) {
+        const room = Game.rooms[roomname];
+        if (!room) {
+            return false;
+        }
+        if (!this.meta.children) {
+            this.meta.children = {};
+        }
+        for (let x = 0; x < quantity; x++) {
+            const sLabel = label + x;
+            if (this.meta.children[sLabel]) {
+                continue;
+            }
+            const creepName = room.queueCreep(role, options);
+            this.launchChildProcess(sLabel, 'creep', {
+                'creep': creepName
+            });
+        }
     }
 
     suicide () {

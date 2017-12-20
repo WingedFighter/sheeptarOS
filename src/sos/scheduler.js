@@ -1,4 +1,4 @@
-global.DEFAULT_PRIORITY = 6;
+global.DEFAULT_PRIORITY = global.PRIORITIES_DEFAULT || 6;
 
 const MAX_PRIORITY = 16;
 const MAX_PID = 9999999;

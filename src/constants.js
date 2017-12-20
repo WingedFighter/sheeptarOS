@@ -1,0 +1,24 @@
+if (!Memory.username) {
+    Memory.username = 'wingedfighter';
+}
+
+global.USERNAME = Memory.username;
+
+global.PRIORITIES_SPAWN = 3;
+global.PRIORITIES_DEFAULT = 6;
+global.PRIORITIES_CELL = 7;
+global.PRIORITIES_PLAYER = 8;
+global.PRIORITIES_MAINTENANCE = 12;
+global.PRIORITIES_RESPAWN = 12;
+
+global.SPAWN_DEFAULT_PRIORITY = 4;
+
+global.MINERALS_EXTRACTABLE = [
+    RESOURCE_HYDROGEN,
+    RESOURCE_OXYGEN,
+    RESOURCE_UTRIUM,
+    RESOURCE_LEMERGIUM,
+    RESOURCE_KEANIUM,
+    RESOURCE_ZYNTHIUM,
+    RESOURCE_CATALYST
+];

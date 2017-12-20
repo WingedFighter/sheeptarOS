@@ -1,5 +1,4 @@
 // Top level program
-const PRIORITIES_PLAYER = 1;
 class Player extends kernel.process {
     constructor(...args) {
         super(...args);
@@ -7,7 +6,22 @@ class Player extends kernel.process {
     }
 
     main () {
+        // Launch Respawner
+        this.launchChildProcess('respawn', 'respawn');
 
+        // Launch Memory Cleanup (remove old construction sites)
+        this.launchChildProcess('cleanup', 'cleanup');
+
+        // Get a list of cells
+        const cells = Room.getCells();
+        // Launch Cell program for each cell, in the future this will also be where to handle clusters
+        for (let roomname of cells) {
+            if (Game.rooms[roomname] && Game.rooms[roomname].controller && Game.rooms[roomname].controller.my) {
+                this.launchChildProcess(`room_${roomname}`, 'cell_cell', {
+                    'room': roomname
+                });
+            }
+        }
     }
 }
 
