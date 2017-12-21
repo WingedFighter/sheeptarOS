@@ -8,6 +8,9 @@ global.Logger = new SosLogger;
 const SosKernel = require('sos_kernel');
 
 require('extends_room');
+require('extends_economy');
+require('extends_creep');
+require('extends_source');
 
 module.exports.loop = function() {
     const kernel = new SosKernel();
