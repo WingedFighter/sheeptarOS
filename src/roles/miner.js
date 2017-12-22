@@ -6,7 +6,7 @@ class Miner extends MetaRole {
     }
 
     getBuild() {
-        return ([WORK, CARRY, MOVE]);
+        return [WORK, CARRY, MOVE];
     }
 
     manageCreep (creep) {
@@ -14,32 +14,26 @@ class Miner extends MetaRole {
             //TODO: Add recycle
         }
 
-        let refill = !!creep.memory.isRefilling;
-        if (!refill && creep.carry.energy === 0) {
-            refill = true;
-        }
-        if (refill && creep.carry.energy === creep.carryCapacity) {
-            refill = false;
-        }
-        if (refill) {
-            let target = Game.getObjectById(creep.memory.memory.source);
-            if (creep.harvest(target) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
-            }
-        } else {
-            let spawn = creep.pos.findClosestByPath(FIND_MY_SPAWNS);
-            if (spawn.energy < spawn.energyCapacity) {
-                if (creep.transfer(spawn, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(spawn);
-                }
-            } else {
-                if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(creep.room.controller);
-                }
-            }
+        if (creep.refill()) {
+            return;
         }
 
-        creep.memory.isRefilling = refill;
+        // TODO: Better miner behaivor (return to other structures based on economy)
+        const spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
+        if (spawn) {
+            if (creep.pos.isNearTo(spawn)) {
+                creep.transfer(spawn, RESOURCE_ENERGY);
+            } else {
+                creep.moveTo(spawn);
+            }
+        } else {
+            const cont = creep.room.controller;
+            if (cont.my && creep.pos.isNearTo(cont)) {
+                creep.upgrade(cont);
+            } else if (cont.my) {
+                creep.moveTo(cont);
+            }
+        }
     }
 }
 

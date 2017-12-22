@@ -17,12 +17,13 @@ class Mining extends kernel.process {
 
         if (!Memory.mining[this.meta.room]) {
             Memory.mining[this.meta.room] = {};
-            for (let source of this.room.find(FIND_SOURCES)) {
-                Memory.mining[this.meta.room][source.id] = {'max': source.maximumMiningCreeps(), 'assigned': []};
-                Logger.log(`Starting up Mining Program for ${source.id} with ${source.maximumMiningCreeps()} creeps`);
-                this.launchProcessWithCreep(`mining_creep_${source.id}`, 'miner', this.meta.room,
-                    Memory.mining[this.meta.room][source.id]['max'], {'source': source.id});
-            }
+        }
+
+        for (let source of this.room.find(FIND_SOURCES)) {
+            Memory.mining[this.meta.room][source.id] = {'max': source.maximumMiningCreeps(), 'assigned': []};
+            Logger.log(`Starting up Mining Program for ${source.id} with ${source.maximumMiningCreeps()} creeps`);
+            this.launchProcessWithCreep(`mining_creep_${source.id}`, 'miner', this.meta.room,
+                Memory.mining[this.meta.room][source.id]['max'], {'source': source.id});
         }
     }
 }
