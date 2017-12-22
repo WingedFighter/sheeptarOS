@@ -85,6 +85,28 @@ Room.isQueued = function (name) {
     return false;
 };
 
+Room.prototype.getQueuedCreepBuild = function () {
+    if (!Memory.spawnqueue || !Memory.spawnqueue.index || !Memory.spawnqueue.index[this.name]) {
+        return false;
+    }
+
+    const creeps = Object.keys(Memory.spawnqueue.index[this.name]);
+    if (creeps.length < 1) {
+        return false;
+    }
+
+    const that = this;
+    creeps.sort(function (a, b) {
+        const aP = Memory.spawnqueue.index[that.name][a].priority ? Memory.spawnqueue.index[that.name][a].priority : SPAWN_DEFAULT_PRIORITY;
+        const bP = Memory.spawnqueue.index[that.name][b].priority ? Memory.spawnqueue.index[that.name][b].priority : SPAWN_DEFAULT_PRIORITY;
+        return aP - bP;
+    });
+
+    return Memory.spawnqueue.index[this.name][creeps[0]].build;
+
+};
+
+
 Room.prototype.getQueuedCreep = function() {
     if (!Memory.spawnqueue || !Memory.spawnqueue.index || !Memory.spawnqueue.index[this.name]) {
         return false;
@@ -114,4 +136,24 @@ Room.prototype.getQueuedCreep = function() {
     this.queued.push(options.name);
     delete Memory.spawnqueue.index[this.name][creeps[0]];
     return options;
+};
+
+Room.prototype.getDEFCON = function () {
+    const hostileCreeps = this.find(FIND_HOSTILE_CREEPS);
+    const hostileConstruction = this.find(FIND_HOSTILE_CONSTRUCTION_SITES);
+    const hostileSpawns = this.find(FIND_HOSTILE_SPAWNS);
+    const hostileStructures = this.find(FIND_HOSTILE_STRUCTURES);
+
+    if (hostileCreeps.length === 0 && hostileConstruction.length === 0 && hostileSpawns.length === 0 && hostileStructures.length === 0) {
+        return DEFCON.ONE;
+    } else if (hostileConstruction.length === 0 && hostileSpawns.length === 0 && hostileStructures.length === 0) {
+        return DEFCON.TWO;
+    } else if (hostileStructures.length === 0 && hostileSpawns.length === 0) {
+        return DEFCON.THREE;
+    } else  if (hostileSpawns.length === 0) {
+        return DEFCON.FOUR;
+    } else {
+        return DEFCON.FIVE;
+    }
+
 };

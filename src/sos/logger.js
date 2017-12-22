@@ -20,6 +20,10 @@ class Logger {
         this.defaultLogGroup = 'default';
     }
 
+    setLogLevel (loglevel) {
+        Memory.loglevel = loglevel;
+    }
+
     log (message, severity = 3, group = false, tags = []) {
         if (!group) {
             group = this.defaultLogGroup;

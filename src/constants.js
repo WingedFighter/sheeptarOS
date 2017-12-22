@@ -15,6 +15,7 @@ global.PRIORITIES_RESPAWN = 12;
 
 global.SPAWN_DEFAULT_PRIORITY = 4;
 
+global.PRIORITIES_DEFENSE_INITIALIZATION = 0;
 global.PRIORITIES_CREEP_DEFAULT = 4;
 
 global.MINERALS_EXTRACTABLE = [
@@ -33,4 +34,21 @@ global.ECONOMIC_LEVEL = {
     STABLE : 2,
     STRONG : 3,
     BURSTING : 4
+};
+
+// DEFCON 1 is safe, DEFCON 5 is imminent respawn
+global.DEFCON = {
+    ONE : 'ONE',
+    TWO : 'TWO',
+    THREE : 'THREE',
+    FOUR : 'FOUR',
+    FIVE : 'FIVE'
+};
+
+global.PRIORITIES_DEFENSE = {
+    'ONE' : 3,
+    'TWO' : 3,
+    'THREE' : 2,
+    'FOUR' : 1,
+    'FIVE' : 0
 };

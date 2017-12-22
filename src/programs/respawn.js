@@ -4,6 +4,10 @@ class Respawn extends kernel.process {
         this.priority = PRIORITIES_RESPAWN;
     }
 
+    getPriority () {
+        return this.priority;
+    }
+
     main () {
         if (Object.keys(Game.spawns).length > 0 || Object.keys(Game.creeps).length > 0) {
             return;

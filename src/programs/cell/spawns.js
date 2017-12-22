@@ -4,6 +4,10 @@ class Spawns extends kernel.process {
         this.priority = PRIORITIES_SPAWN;
     }
 
+    getPriority () {
+        return this.priority;
+    }
+
     main () {
         if (!Game.rooms[this.meta.room]) {
             return this.suicide();
@@ -13,9 +17,14 @@ class Spawns extends kernel.process {
         const spawns = this.room.find(FIND_MY_SPAWNS);
 
         for (let spawn of spawns) {
-            if (spawn.spawning || spawn.energy < 300) {
+            if (spawn.spawning) {
                 continue;
             }
+
+            if (spawn.spawnCreep(this.room.getQueuedCreepBuild(), 'Test', { dryRun: true }) !== 0) {
+                continue;
+            }
+
             const creep = this.room.getQueuedCreep();
             if (!creep) {
                 break;
@@ -24,7 +33,7 @@ class Spawns extends kernel.process {
             if (Number.isInteger(result)) {
                 Logger.log(`ERROR: ${result} while spawning creep in ${this.meta.room}`, LOG_ERROR);
             } else {
-                Logger.log(`Spawning creep from ${this.meta.room}`);
+                Logger.log(`Spawning creep ${creep.name} with build ${creep.build} from ${this.meta.room}`);
             }
         }
     }

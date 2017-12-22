@@ -6,6 +6,10 @@ class Cleanup extends kernel.process {
         this.priority = PRIORITIES_MAINTENANCE;
     }
 
+    getPriority () {
+        return this.priority;
+    }
+
     main () {
         if (!Memory.construction) {
             Memory.construction = {};

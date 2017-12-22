@@ -32,7 +32,9 @@ Creep.prototype.refill = function () {
     // Check for storage or terminal
 
     // Check for dropped energy
-    const drops = this.room.find(FIND_DROPPED_ENERGY);
+    const drops = this.room.find(FIND_DROPPED_RESOURCES, {filter: function (resource) {
+            return resource.resourceType === RESOURCE_ENERGY;
+        }});
 
     if (drops.length > 0) {
         const target = this.pos.findClosestByRange(drops);

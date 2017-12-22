@@ -1,7 +1,11 @@
 class Mining extends kernel.process {
-    constructor(...args) {
+    constructor (...args) {
         super(...args);
         this.priority = PRIORITIES_MINING;
+    }
+
+    getPriority () {
+        return this.priority;
     }
 
     main () {
@@ -21,7 +25,7 @@ class Mining extends kernel.process {
 
         for (let source of this.room.find(FIND_SOURCES)) {
             Memory.mining[this.meta.room][source.id] = {'max': source.maximumMiningCreeps(), 'assigned': []};
-            Logger.log(`Starting up Mining Program for ${source.id} with ${source.maximumMiningCreeps()} creeps`);
+            Logger.log(`Starting up Mining Program for ${source.id} with ${source.maximumMiningCreeps()} creeps`, LOG_TRACE);
             this.launchProcessWithCreep(`mining_creep_${source.id}`, 'miner', this.meta.room,
                 Memory.mining[this.meta.room][source.id]['max'], {'source': source.id});
         }

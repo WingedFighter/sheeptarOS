@@ -143,6 +143,12 @@ class Kernel {
         Logger.log(`CPU Used: ${Game.cpu.getUsed()}`, LOG_INFO, 'kernel');
         Logger.log(`Bucket: ${Game.cpu.bucket}`, LOG_INFO, 'kernel');
 
+        Memory.runPercent = (completedCount/processCount).toFixed(4) * 100;
+        Memory.tickLimit = Game.cpu.tickLimit;
+        Memory.kernelLimit = this.limit;
+        Memory.cpuUsed = Game.cpu.getUsed();
+        Memory.bucket = Game.cpu.bucket;
+
     }
 
     static sigmoid (x) {

@@ -5,6 +5,10 @@ class Player extends kernel.process {
         this.priority = PRIORITIES_PLAYER;
     }
 
+    getPriority () {
+        return this.priority;
+    }
+
     main () {
         // Launch Respawner
         this.launchChildProcess('respawn', 'respawn');

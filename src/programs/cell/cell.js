@@ -4,6 +4,10 @@ class Cell extends kernel.process {
         this.priority = PRIORITIES_CELL;
     }
 
+    getPriority () {
+        return this.priority;
+    }
+
     main () {
         if (!Game.rooms[this.meta.room] || !Game.rooms[this.meta.room].controller.my) {
             Room.removeCell(this.meta.room);
@@ -28,21 +32,17 @@ class Cell extends kernel.process {
             'room': this.room.name
         });
 
-        let economicLevel = Game.rooms[this.meta.room].getEconomicLevel();
-        switch (economicLevel) {
-            case ECONOMIC_LEVEL.UNSTABLE:
-                break;
-            case ECONOMIC_LEVEL.DEVELOPING:
-                break;
-            case ECONOMIC_LEVEL.STABLE:
-                break;
-            case ECONOMIC_LEVEL.STRONG:
-                break;
-            case ECONOMIC_LEVEL.BURSTING:
-                break;
-            default:
-                break;
+        this.launchChildProcess(`construction_${this.meta.room}`, 'cell_construction', {
+            'room': this.room.name
+        });
+
+        if (this.room.getDEFCON() === DEFCON.ONE) {
+            return;
         }
+
+        this.launchChildProcess(`defense_${this.meta.room}`, 'cell_defense', {
+            'room': this.room.name
+        });
     }
 }
 
