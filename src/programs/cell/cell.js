@@ -19,10 +19,14 @@ class Cell extends kernel.process {
         }
 
         // Since Spawns exist, launch spawn program for this room
-        this.launchChildProcess(`${this.meta.room}_spawns`, 'cell_spawns');
+        this.launchChildProcess(`spawns_${this.meta.room}`, 'cell_spawns', {
+            'room': this.room.name
+        });
 
         // Start Mining Process
-        this.launchChildProcess(`${this.meta.room}_mining`, 'cell_mining');
+        this.launchChildProcess(`mining_${this.meta.room}`, 'cell_mining', {
+            'room': this.room.name
+        });
 
         let economicLevel = Game.rooms[this.meta.room].getEconomicLevel();
         switch (economicLevel) {

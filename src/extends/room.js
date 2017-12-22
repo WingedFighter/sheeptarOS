@@ -1,3 +1,5 @@
+const MAX_CID = 99999;
+
 Room.getCells = function () {
     if (!Memory.cellList || Object.keys(Memory.cellList).length < 0) {
         Memory.cellList = {};
@@ -19,8 +21,25 @@ Room.removeCell = function(roomname) {
     }
 };
 
+Room.prototype.getNextCreepID = function(role) {
+    if (!Memory.sos.lastCID) {
+        Memory.sos.lastCID = 0;
+    }
+
+    while (true) {
+        Memory.sos.lastCID++;
+        if (Memory.sos.lastCID > MAX_CID) {
+            Memory.sos.lastCID = 0;
+        }
+        if (Game.creeps[(role + '_' + this.name + '_' + Memory.sos.lastCID).toString()]) {
+            continue;
+        }
+        return Memory.sos.lastCID;
+    }
+};
+
 Room.prototype.queueCreep = function (role, options = {}) {
-    const name = (role + '_' + (new Date().getTime())).toString();
+    const name = (role + '_' + this.name + '_' + this.getNextCreepID(role)).toString();
 
     if (!options.priority) {
         options.priority = SPAWN_DEFAULT_PRIORITY;
@@ -83,9 +102,10 @@ Room.prototype.getQueuedCreep = function() {
         return aP - bP;
     });
 
-    const options = Memory.spawnqueue.index[this.name][creeps[0]];
-    const role = Creep.getRole(options.role);
-    options.build = role.getBuild(this, options);
+    const options = {};
+    options.memory = Memory.spawnqueue.index[this.name][creeps[0]];
+    const role = Creep.getRole(options.memory.role);
+    options.build = role.getBuild();
     options.name = creeps[0];
 
     if (!this.queued) {

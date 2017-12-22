@@ -6,7 +6,7 @@ class Miner extends MetaRole {
     }
 
     getBuild() {
-        return ['WORK', 'CARRY', 'MOVE'];
+        return ([WORK, CARRY, MOVE]);
     }
 
     manageCreep (creep) {
@@ -14,10 +14,7 @@ class Miner extends MetaRole {
             //TODO: Add recycle
         }
 
-        let refill;
-        if (!creep.memory.isRefilling) {
-            refill = creep.memory.isRefilling = false;
-        }
+        let refill = !!creep.memory.isRefilling;
         if (!refill && creep.carry.energy === 0) {
             refill = true;
         }
@@ -25,7 +22,7 @@ class Miner extends MetaRole {
             refill = false;
         }
         if (refill) {
-            let target = creep.pos.findClosestByPath(FIND_SOURCES);
+            let target = Game.getObjectById(creep.memory.memory.source);
             if (creep.harvest(target) === ERR_NOT_IN_RANGE) {
                 creep.moveTo(target);
             }
@@ -33,14 +30,16 @@ class Miner extends MetaRole {
             let spawn = creep.pos.findClosestByPath(FIND_MY_SPAWNS);
             if (spawn.energy < spawn.energyCapacity) {
                 if (creep.transfer(spawn, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target);
+                    creep.moveTo(spawn);
                 }
             } else {
-                if (creep.upgrade(creep.room.controller) === ERR_NOT_IN_RANGE) {
+                if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.controller);
                 }
             }
         }
+
+        creep.memory.isRefilling = refill;
     }
 }
 

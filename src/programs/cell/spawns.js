@@ -9,18 +9,18 @@ class Spawns extends kernel.process {
             return this.suicide();
         }
 
-        this.room = Game.rooms[this.data.room];
+        this.room = Game.rooms[this.meta.room];
         const spawns = this.room.find(FIND_MY_SPAWNS);
 
         for (let spawn of spawns) {
-            if (spawn.spawning) {
+            if (spawn.spawning || spawn.energy < 300) {
                 continue;
             }
             const creep = this.room.getQueuedCreep();
             if (!creep) {
                 break;
             }
-            const result = spawn.createCreep(creep.build, creep.name, creep.memory); //Need to add creep class
+            const result = spawn.createCreep(creep.build, creep.name, {memory: creep.memory}); //Need to add creep class
             if (Number.isInteger(result)) {
                 Logger.log(`ERROR: ${result} while spawning creep in ${this.meta.room}`, LOG_ERROR);
             } else {
