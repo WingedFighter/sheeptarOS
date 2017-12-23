@@ -102,8 +102,11 @@ Room.prototype.getQueuedCreepBuild = function () {
         return aP - bP;
     });
 
-    return Memory.spawnqueue.index[this.name][creeps[0]].build;
-
+    const options = {};
+    options.memory = Memory.spawnqueue.index[this.name][creeps[0]];
+    const role = Creep.getRole(options.memory.role);
+    options.build = role.getBuild();
+    return options.build;
 };
 
 

@@ -36,6 +36,10 @@ class Cell extends kernel.process {
             'room': this.room.name
         });
 
+        this.launchChildProcess(`repair_${this.meta.room}`, 'cell_repair', {
+            'room': this.room.name
+        });
+
         if (this.room.getDEFCON() === DEFCON.ONE) {
             return;
         }

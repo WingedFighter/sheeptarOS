@@ -20,7 +20,6 @@ class Spawns extends kernel.process {
             if (spawn.spawning) {
                 continue;
             }
-
             if (spawn.spawnCreep(this.room.getQueuedCreepBuild(), 'Test', { dryRun: true }) !== 0) {
                 continue;
             }
@@ -29,7 +28,7 @@ class Spawns extends kernel.process {
             if (!creep) {
                 break;
             }
-            const result = spawn.createCreep(creep.build, creep.name, {memory: creep.memory}); //Need to add creep class
+            const result = spawn.spawnCreep(creep.build, creep.name, {memory: creep.memory}); //Need to add creep class
             if (Number.isInteger(result)) {
                 Logger.log(`ERROR: ${result} while spawning creep in ${this.meta.room}`, LOG_ERROR);
             } else {
