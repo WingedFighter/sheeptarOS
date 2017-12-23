@@ -20,7 +20,7 @@ class Miner extends MetaRole {
             return false;
         }
 
-        const source = Game.getObjectById(creep.memory.memory.source);
+        const source = Game.getObjectById(creep.memory.source);
         if (source) {
             if (creep.pos.isNearTo(source)) {
                 creep.harvest(source);
