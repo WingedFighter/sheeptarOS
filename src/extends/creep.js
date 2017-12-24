@@ -18,6 +18,21 @@ Creep.prototype.getRole = function () {
     return Creep.getRole(roleType);
 };
 
+Creep.prototype.recycle = function () {
+    const spawn = this.room.findClosestByRange(FIND_STRUCTURES, {filter: function (structure) {
+            return structure.structureType === STRUCTURE_SPAWN;
+        }});
+    if (!spawn) {
+        this.suicide();
+        return;
+    }
+    if (this.pos.isEqualTo(spawn.pos)) {
+        spawn.recycleCreep(this);
+    } else {
+        this.moveTo(spawn);
+    }
+};
+
 Creep.prototype.refill = function () {
     if (this.carry[RESOURCE_ENERGY] <= 0) {
         this.memory.refill = true;

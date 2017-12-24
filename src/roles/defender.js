@@ -14,7 +14,8 @@ class Defender extends MetaRole {
         // TODO: Better target selection
         const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (!target) {
-            // TODO: Add recycle
+            console.log('here');
+            creep.recycle();
             return;
         }
 
