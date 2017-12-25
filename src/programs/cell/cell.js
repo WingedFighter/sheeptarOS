@@ -40,6 +40,15 @@ class Cell extends kernel.process {
             'room': this.room.name
         });
 
+        const containers = this.room.find(FIND_MY_STRUCTURES, {filter: function (structure) {
+                return structure.structureType === STRUCTURE_CONTAINER
+            }});
+
+        if (containers && containers.length > 0) {
+            this.launchProcessWithCreep(`hauler_creep_${this.meta.room}`, 'hauler', this.meta.room,
+                Math.max(1, Math.round(containers.length / 2)));
+        }
+
         if (this.room.getDEFCON() === DEFCON.ONE) {
             return;
         }
