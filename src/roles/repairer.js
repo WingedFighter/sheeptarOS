@@ -12,16 +12,18 @@ class Repairer extends MetaRole {
     manageCreep (creep) {
         if (creep.ticksToLive < 50) {
             creep.recycle();
+            return;
         }
 
         if (creep.refill()) {
             return;
         }
 
-        const target = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: function (structure) {
-                return structure.my && structure.hits < structure.hitsMax;
+        const target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function (structure) {
+                return structure.hits < structure.hitsMax;
             }});
         if (!target) {
+            creep.recycle();
             return;
         }
         if (creep.pos.isNearTo(target)) {

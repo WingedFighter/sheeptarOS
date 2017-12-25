@@ -19,7 +19,7 @@ Creep.prototype.getRole = function () {
 };
 
 Creep.prototype.recycle = function () {
-    const spawn = this.room.findClosestByRange(FIND_STRUCTURES, {filter: function (structure) {
+    const spawn = this.pos.findClosestByRange(FIND_STRUCTURES, {filter: function (structure) {
             return structure.structureType === STRUCTURE_SPAWN;
         }});
     if (!spawn) {
@@ -62,6 +62,14 @@ Creep.prototype.refill = function () {
     }
 
     // Check for containers
+    const container = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: function (structure) {
+            return structure.structureType === STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] > 0
+        }});
+    if (container) {
+        if (this.pos.isNearTo(container)) {
+            this.withdraw(container, RESOURCE_ENERGY);
+        }
+    }
 
     // Harvest
     const source = this.pos.findClosestByRange(FIND_SOURCES_ACTIVE);

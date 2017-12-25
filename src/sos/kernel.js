@@ -106,9 +106,20 @@ class Kernel {
         for (i in Memory.creeps) { // jshint ignore:line
             if (!Game.creeps[i]) {
                 delete Memory.creeps[i];
-            }
-        }
 
+            }
+            /*
+            // if process with name creep and meta tag with matching creep does not exist
+            const creepProcesses = Memory.sos.processTable.index.filter(
+                function (data) {
+                    return data.n === 'creep' && data.m.creep === i;
+                }
+            );
+
+            if (!creepProcesses || creepProcesses.length <= 0) {
+                Game.creeps[i].recycle();
+            }*/
+        }
         // Clean elsewhere
     }
 
