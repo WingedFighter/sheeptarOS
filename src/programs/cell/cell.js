@@ -40,13 +40,18 @@ class Cell extends kernel.process {
             'room': this.room.name
         });
 
+        this.launchChildProcess(`upgrade_${this.meta.room}`, 'cell_upgrading', {
+            'room': this.room.name
+        });
+
         const containers = this.room.find(FIND_STRUCTURES, {filter: function (structure) {
-                return structure.structureType === STRUCTURE_CONTAINER && structure.energy > 0
+                return structure.structureType === STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] > 0
             }});
 
         if (containers && containers.length > 0) {
-            this.launchProcessWithCreep(`hauler_creep_${this.meta.room}`, 'hauler', this.meta.room,
-                Math.max(1, Math.round(containers.length / 2)));
+            this.launchChildProcess(`haul_${this.meta.room}`, 'cell_hauling', {
+                'room': this.room.name
+            });
         }
 
         if (this.room.getDEFCON() === DEFCON.ONE) {

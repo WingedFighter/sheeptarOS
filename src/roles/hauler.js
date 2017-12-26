@@ -36,3 +36,5 @@ class Hauler extends MetaRole {
         }
     }
 }
+
+module.exports = Hauler;
