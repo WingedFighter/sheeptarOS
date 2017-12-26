@@ -19,13 +19,7 @@ class Upgrader extends MetaRole{
             return;
         }
 
-        const target = creep.room.controller;
-
-        if (creep.pos.isNearTo(target)) {
-            creep.upgradeController(target);
-        } else {
-            creep.moveTo(target);
-        }
+        creep.upgradeAtController();
     }
 }
 

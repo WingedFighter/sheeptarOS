@@ -18,6 +18,16 @@ Creep.prototype.getRole = function () {
     return Creep.getRole(roleType);
 };
 
+Creep.prototype.upgradeAtController = function () {
+    const target = this.room.controller;
+
+    if (this.pos.isNearTo(target)) {
+        this.upgradeController(target);
+    } else {
+        this.moveTo(target);
+    }
+};
+
 Creep.prototype.recycle = function () {
     const spawn = this.pos.findClosestByRange(FIND_STRUCTURES, {filter: function (structure) {
             return structure.structureType === STRUCTURE_SPAWN;

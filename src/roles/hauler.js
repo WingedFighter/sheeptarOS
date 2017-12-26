@@ -25,7 +25,7 @@ class Hauler extends MetaRole {
                         structure.energy < structure.energyCapacity
                 }});
             if (!target) {
-                creep.recycle();
+                creep.upgradeAtController();
                 return;
             }
             if (creep.pos.isNearTo(target)) {
@@ -33,6 +33,8 @@ class Hauler extends MetaRole {
             } else {
                 creep.moveTo(target);
             }
+        } else {
+            creep.upgradeAtController();
         }
     }
 }

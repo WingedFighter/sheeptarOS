@@ -80,12 +80,7 @@ class Miner extends MetaRole {
                     creep.moveTo(target);
                 }
             } else {
-                const cont = creep.room.controller;
-                if (cont.my && creep.pos.isNearTo(cont)) {
-                    creep.upgradeController(cont);
-                } else if (cont.my) {
-                    creep.moveTo(cont);
-                }
+                creep.upgradeAtController();
             }
         } else {
             if (target && target.energy < target.energyCapacity) {
@@ -95,12 +90,7 @@ class Miner extends MetaRole {
                     creep.moveTo(target);
                 }
             } else {
-                const cont = creep.room.controller;
-                if (cont.my && creep.pos.isNearTo(cont)) {
-                    creep.upgradeController(cont);
-                } else if (cont.my) {
-                    creep.moveTo(cont);
-                }
+                creep.upgradeAtController();
             }
         }
     }

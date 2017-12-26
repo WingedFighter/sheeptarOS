@@ -22,6 +22,7 @@ class Builder extends MetaRole {
         // TODO: Better target selection
         const target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
         if (!target) {
+            creep.recycle();
             return;
         }
 

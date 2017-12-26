@@ -45,7 +45,7 @@ class Cell extends kernel.process {
         });
 
         const containers = this.room.find(FIND_STRUCTURES, {filter: function (structure) {
-                return structure.structureType === STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] > 0
+                return structure.structureType === STRUCTURE_CONTAINER
             }});
 
         if (containers && containers.length > 0) {
