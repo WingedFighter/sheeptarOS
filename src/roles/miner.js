@@ -33,25 +33,31 @@ class Miner extends MetaRole {
     }
 
     findTarget (creep) {
-        const container = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: function (structure) {
+        const spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS, {filter: function (structure) {
+                return structure.energy < structure.energyCapacity
+            }});
+        if (spawn) {
+            this.isSpawn = true;
+            return spawn;
+        }
+        const ext = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+            filter: function (structure) {
+                return structure.structureType === STRUCTURE_EXTENSION && structure.energy < structure.energyCapacity
+            }
+        });
+        if (ext) {
+            this.isSpawn = true;
+            return ext;
+        }
+        const container = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: function (structure) {
                 return structure.structureType === STRUCTURE_CONTAINER && structure.store[RESOURCE_ENERGY] < structure.storeCapacity
             }});
-        const spawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
-        if (container && spawn && container.pos.getRangeTo(creep.pos) - spawn.pos.getRangeTo(creep.pos) > 0) {
+        if (container) {
             this.isSpawn = false;
             return container;
-        } else {
-            this.isSpawn = true;
-            if (spawn.energy < spawn.energyCapacity) {
-                return spawn;
-            } else {
-                return creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                    filter: function (structure) {
-                        return structure.structureType === STRUCTURE_EXTENSION && structure.energy < structure.energyCapacity
-                    }
-                });
-            }
         }
+
+        return false;
     }
 
     manageCreep (creep) {

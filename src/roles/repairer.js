@@ -1,4 +1,4 @@
-const MetaRole = require('role_meta');
+const MetaRole = require('roles_meta');
 
 class Repairer extends MetaRole {
     constructor () {
@@ -19,7 +19,7 @@ class Repairer extends MetaRole {
             return;
         }
 
-        const target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function (structure) {
+        const target = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: function (structure) {
                 return structure.hits < structure.hitsMax;
             }});
         if (!target) {

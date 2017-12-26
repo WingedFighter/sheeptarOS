@@ -40,8 +40,8 @@ class Cell extends kernel.process {
             'room': this.room.name
         });
 
-        const containers = this.room.find(FIND_MY_STRUCTURES, {filter: function (structure) {
-                return structure.structureType === STRUCTURE_CONTAINER
+        const containers = this.room.find(FIND_STRUCTURES, {filter: function (structure) {
+                return structure.structureType === STRUCTURE_CONTAINER && structure.energy > 0
             }});
 
         if (containers && containers.length > 0) {

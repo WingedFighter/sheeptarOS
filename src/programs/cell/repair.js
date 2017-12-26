@@ -16,8 +16,9 @@ class Repair extends kernel.process {
         }
 
         const repairList = this.room.find(FIND_STRUCTURES, {filter: function (structure) {
-                return structure.my && structure.hits < structure.hitsMax;
+                return structure.hits < structure.hitsMax;
             }});
+
         if (repairList && repairList.length > 0) {
             this.launchProcessWithCreep(`repairer_creep_${this.meta.room}`, 'repairer', this.meta.room,
                 Math.max(1, Math.round(repairList.length / 10)));

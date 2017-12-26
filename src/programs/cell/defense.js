@@ -19,7 +19,7 @@ class Defense extends kernel.process {
         this.priority = PRIORITIES_DEFENSE[this.DEFCON];
 
         if (this.DEFCON === DEFCON.ONE) {
-            return this.suicide();
+            return;
         }
 
         const hostileCreeps = this.room.find(FIND_HOSTILE_CREEPS);
